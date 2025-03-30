@@ -1,10 +1,6 @@
-// EDtunnel - A Cloudflare Worker-based VLESS Proxy with WebSocket Transport
+// A Cloudflare Worker-based VLESS Proxy with WebSocket Transport
 // @ts-ignore
 import { connect } from 'cloudflare:sockets';
-
-// ======================================
-// Configuration
-// ======================================
 
 /**
  * User configuration and settings
@@ -21,10 +17,6 @@ const proxyIPs = ['ts.hpc.tw:443', 'proxy.xxxxxxxx.tk:443'];
 // Randomly select a proxy server from the pool
 let proxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
 let proxyPort = proxyIP.includes(':') ? proxyIP.split(':')[1] : '443';
-
-// Alternative configurations:
-// Single proxy IP: let proxyIP = 'cdn.xn--b6gac.eu.org';
-// IPv6 example: let proxyIP = "[2a01:4f8:c2c:123f:64:5:6810:c55a]"
 
 /**
  * SOCKS5 proxy configuration
@@ -881,17 +873,6 @@ async function socks5Connect(addressType, addressRemote, portRemote, log) {
 		port,
 	});
 
-	// Request head format (Worker -> Socks Server):
-	// +----+----------+----------+
-	// |VER | NMETHODS | METHODS  |
-	// +----+----------+----------+
-	// | 1  |    1     | 1 to 255 |
-	// +----+----------+----------+
-
-	// https://en.wikipedia.org/wiki/SOCKS#SOCKS5
-	// For METHODS:
-	// 0x00 NO AUTHENTICATION REQUIRED
-	// 0x02 USERNAME/PASSWORD https://datatracker.ietf.org/doc/html/rfc1929
 	const socksGreeting = new Uint8Array([5, 2, 0, 2]);
 
 	const writer = socket.writable.getWriter();
@@ -902,12 +883,6 @@ async function socks5Connect(addressType, addressRemote, portRemote, log) {
 	const reader = socket.readable.getReader();
 	const encoder = new TextEncoder();
 	let res = (await reader.read()).value;
-	// Response format (Socks Server -> Worker):
-	// +----+--------+
-	// |VER | METHOD |
-	// +----+--------+
-	// | 1  |   1    |
-	// +----+--------+
 	if (res[0] !== 0x05) {
 		log(`socks server version error: ${res[0]} expected: 5`);
 		return;
@@ -924,11 +899,6 @@ async function socks5Connect(addressType, addressRemote, portRemote, log) {
 			log("please provide username/password");
 			return;
 		}
-		// +----+------+----------+------+----------+
-		// |VER | ULEN |  UNAME   | PLEN |  PASSWD  |
-		// +----+------+----------+------+----------+
-		// | 1  |  1   | 1 to 255 |  1   | 1 to 255 |
-		// +----+------+----------+------+----------+
 		const authRequest = new Uint8Array([
 			1,
 			username.length,
@@ -945,23 +915,6 @@ async function socks5Connect(addressType, addressRemote, portRemote, log) {
 		}
 	}
 
-	// Request data format (Worker -> Socks Server):
-	// +----+-----+-------+------+----------+----------+
-	// |VER | CMD |  RSV  | ATYP | DST.ADDR | DST.PORT |
-	// +----+-----+-------+------+----------+----------+
-	// | 1  |  1  | X'00' |  1   | Variable |    2     |
-	// +----+-----+-------+------+----------+----------+
-	// ATYP: address type of following address
-	// 0x01: IPv4 address
-	// 0x03: Domain name
-	// 0x04: IPv6 address
-	// DST.ADDR: desired destination address
-	// DST.PORT: desired destination port in network octet order
-
-	// addressType
-	// 1--> ipv4  addressLength =4
-	// 2--> domain name
-	// 3--> ipv6  addressLength =16
 	let DSTADDR;	// DSTADDR = ATYP + DST.ADDR
 	switch (addressType) {
 		case 1:
@@ -988,12 +941,6 @@ async function socks5Connect(addressType, addressRemote, portRemote, log) {
 	log('sent socks request');
 
 	res = (await reader.read()).value;
-	// Response format (Socks Server -> Worker):
-	//  +----+-----+-------+------+----------+----------+
-	// |VER | REP |  RSV  | ATYP | BND.ADDR | BND.PORT |
-	// +----+-----+-------+------+----------+----------+
-	// | 1  |  1  | X'00' |  1   | Variable |    2     |
-	// +----+-----+-------+------+----------+----------+
 	if (res[1] === 0x00) {
 		log("socks connection opened");
 	} else {
@@ -1050,7 +997,7 @@ const ed = 'RUR0dW5uZWw=';
  * @returns {string} Configuration HTML
  */
 function getConfig(userIDs, hostName, proxyIP) {
-	const commonUrlPart = `?encryption=none&security=tls&sni=${hostName}&fp=randomized&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#${hostName}`;
+	const commonUrlPart = `?encryption=none&security=tls&sni=${hostName}&fp=randomized&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#Wg`;
 
 	// Split the userIDs into an array
 	const userIDArray = userIDs.split(",");
@@ -1062,19 +1009,13 @@ function getConfig(userIDs, hostName, proxyIP) {
 	// HTML Head with CSS and FontAwesome library
 	const htmlHead = `
   <head>
-    <title>EDtunnel: Configuration</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <meta property='og:site_name' content='EDtunnel: Protocol Configuration' />
     <meta property='og:type' content='website' />
-    <meta property='og:title' content='EDtunnel - Protocol Configuration and Subscribe Output' />
     <meta property='og:description' content='Use Cloudflare Pages and Worker serverless to implement protocol' />
     <meta property='og:url' content='https://${hostName}/' />
-    <meta property='og:image' content='https://cdn.jsdelivr.net/gh/6Kmfi6HP/EDtunnel@refs/heads/main/image/logo.png' />
     <meta name='twitter:card' content='summary_large_image' />
-    <meta name='twitter:title' content='EDtunnel - Protocol Configuration and Subscribe Output' />
     <meta name='twitter:description' content='Use Cloudflare Pages and Worker serverless to implement protocol' />
     <meta name='twitter:url' content='https://${hostName}/' />
-    <meta name='twitter:image' content='https://cdn.jsdelivr.net/gh/6Kmfi6HP/EDtunnel@refs/heads/main/image/logo.png' />
     <meta property='og:image:width' content='1500' />
     <meta property='og:image:height' content='1500' />
 
@@ -1198,10 +1139,6 @@ function getConfig(userIDs, hostName, proxyIP) {
 
 	const header = `
     <div class="container">
-      <h1>EDtunnel: Protocol Configuration</h1>
-      <img src="https://cdn.jsdelivr.net/gh/6Kmfi6HP/EDtunnel@refs/heads/main/image/logo.png" alt="EDtunnel Logo" class="logo">
-      <p>Welcome! This function generates configuration for the vless protocol. If you found this useful, please check our GitHub project:</p>
-      <p><a href="https://github.com/6Kmfi6HP/EDtunnel" target="_blank" style="color: #00ff00;">EDtunnel - https://github.com/6Kmfi6HP/EDtunnel</a></p>
       <div style="clear: both;"></div>
       <div class="btn-group">
         <a href="//${hostName}/sub/${userIDArray[0]}" class="btn" target="_blank"><i class="fas fa-link"></i> VLESS Subscription</a>
@@ -1261,7 +1198,7 @@ function getConfig(userIDs, hostName, proxyIP) {
       const userIDArray = ${JSON.stringify(userIDArray)};
       const pt = "${pt}";
       const at = "${at}";
-      const commonUrlPart = "?encryption=none&security=tls&sni=${hostName}&fp=randomized&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#${hostName}";
+      const commonUrlPart = "?encryption=none&security=tls&sni=${hostName}&fp=randomized&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#Wg";
 
       function copyToClipboard(text) {
         navigator.clipboard.writeText(text)
