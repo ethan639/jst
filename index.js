@@ -1140,6 +1140,7 @@ function getConfig(userIDs, hostName, proxyIP) {
 	const header = `
     <div class="container">
       <div style="clear: both;"></div>
+      </div>
       <div class="btn-group">
         <a href="//${hostName}/sub/${userIDArray[0]}" class="btn" target="_blank"><i class="fas fa-link"></i> VLESS Subscription</a>
         <a href="clash://install-config?url=${encodeURIComponent(`https://${hostName}/sub/${userIDArray[0]}?format=clash`)}" class="btn" target="_blank"><i class="fas fa-bolt"></i> Clash Subscription</a>
@@ -1149,12 +1150,12 @@ function getConfig(userIDs, hostName, proxyIP) {
       <div class="subscription-info">
         <h3>选项说明:</h3>
         <ul>
-          <li><strong>VLESS Subscription:</strong> VLESS 协议配置的直接链接。适用于支持 VLESS 的客户.</li>
-          <li><strong>Clash Subscription:</strong> 使用预配置设置打开 Clash 客户端。最适合移动设备上的 Clash 用户.</li>
-          <li><strong>Clash Link:</strong> 将 VLESS 配置转换为 Clash 格式的网络链接。适用于手动导入或故障排除.</li>
-          <li><strong>Best IP Subscription:</strong> 为许多不同国家/地区提供精选的最佳服务器 IP 列表</b>.</li>
+          <li><strong>VLESS Subscription:</strong> VLESS 协议配置的直接链接。适用于支持 VLESS 的客户 </li>
+          <li><strong>Clash Subscription:</strong> 使用预配置设置打开 Clash 客户端。最适合移动设备上的 Clash 用户 </li>
+          <li><strong>Clash Link:</strong> 将 VLESS 配置转换为 Clash 格式的网络链接。适用于手动导入或故障排除 </li>
+          <li><strong>Best IP Subscription:</strong> 为许多不同国家/地区提供精选的最佳服务器 IP 列表 </b></li>
         </ul>
-        <p>Choose the option that best fits your client and needs. For most users, the VLESS or Clash Subscription will be the easiest to use.</p>
+        <p> 选择最适合您的客户和需求的选项。对于大多数用户来说，VLESS 或 Clash 订阅将是最容易使用的 </p>
       </div>
     </div>
   `;
