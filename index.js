@@ -1147,12 +1147,12 @@ function getConfig(userIDs, hostName, proxyIP) {
         <a href="${subbestip}" class="btn" target="_blank"><i class="fas fa-star"></i> Best IP Subscription</a>
       </div>
       <div class="subscription-info">
-        <h3>Options Explained:</h3>
+        <h3>选项说明:</h3>
         <ul>
-          <li><strong>VLESS Subscription:</strong> Direct link for VLESS protocol configuration. Suitable for clients supporting VLESS.</li>
-          <li><strong>Clash Subscription:</strong> Opens the Clash client with pre-configured settings. Best for Clash users on mobile devices.</li>
-          <li><strong>Clash Link:</strong> A web link to convert the VLESS config to Clash format. Useful for manual import or troubleshooting.</li>
-          <li><strong>Best IP Subscription:</strong> Provides a curated list of optimal server IPs for many <b>different countries</b>.</li>
+          <li><strong>VLESS Subscription:</strong> VLESS 协议配置的直接链接。适用于支持 VLESS 的客户.</li>
+          <li><strong>Clash Subscription:</strong> 使用预配置设置打开 Clash 客户端。最适合移动设备上的 Clash 用户.</li>
+          <li><strong>Clash Link:</strong> 将 VLESS 配置转换为 Clash 格式的网络链接。适用于手动导入或故障排除.</li>
+          <li><strong>Best IP Subscription:</strong> 为许多不同国家/地区提供精选的最佳服务器 IP 列表</b>.</li>
         </ul>
         <p>Choose the option that best fits your client and needs. For most users, the VLESS or Clash Subscription will be the easiest to use.</p>
       </div>
