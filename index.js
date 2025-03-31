@@ -12,7 +12,7 @@ let userID = '2b907fb8-588c-4fa4-b046-edd2a3a9facc';
  * Array of proxy server addresses with ports
  * Format: ['hostname:port', 'hostname:port']
  */
-const proxyIPs = ['ts.hpc.tw', 'proxy.xxxxxxxx.tk'];
+const proxyIPs = ['ts.hpc.tw:443', 'proxy.xxxxxxxx.tk:443'];
 
 // Randomly select a proxy server from the pool
 let proxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
@@ -997,7 +997,8 @@ const ed = 'RUR0dW5uZWw=';
  * @returns {string} Configuration HTML
  */
 function getConfig(userIDs, hostName, proxyIP) {
-	const commonUrlPart = `?encryption=none&security=tls&sni=${hostName}&fp=randomized&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#Wg`;
+	const commonUrlPart = `?encryption=none&security=none&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#Wg`;
+	const commonUrlParttls = `?encryption=none&security=tls&sni=${hostName}&fp=randomized&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#Wgs`;
 
 	// Split the userIDs into an array
 	const userIDArray = userIDs.split(",");
@@ -1162,7 +1163,7 @@ function getConfig(userIDs, hostName, proxyIP) {
 
 	const configOutput = userIDArray.map((userID) => {
 		const protocolMain = atob(pt) + '://' + userID + atob(at) + hostName + ":80" + commonUrlPart;
-		const protocolSec = atob(pt) + '://' + userID + atob(at) + proxyIP[0].split(':')[0] + ":" + proxyPort + commonUrlPart;
+		const protocolSec = atob(pt) + '://' + userID + atob(at) + proxyIP[0].split(':')[0] + ":" + proxyPort + commonUrlParttls;
 		return `
       <div class="container config-item">
         <h2>UUID: ${userID}</h2>
@@ -1199,7 +1200,7 @@ function getConfig(userIDs, hostName, proxyIP) {
       const userIDArray = ${JSON.stringify(userIDArray)};
       const pt = "${pt}";
       const at = "${at}";
-      const commonUrlPart = "?encryption=none&security=tls&sni=${hostName}&fp=randomized&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#Wgs";
+      const commonUrlParttls = "?encryption=none&security=tls&sni=${hostName}&fp=randomized&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#Wgs";
 
       function copyToClipboard(text) {
         navigator.clipboard.writeText(text)
@@ -1215,7 +1216,7 @@ function getConfig(userIDs, hostName, proxyIP) {
         const select = document.getElementById('proxySelect');
         const proxyValue = select.value;
         const [host, port] = proxyValue.split(':');
-        const protocolSec = atob(pt) + '://' + userIDArray[0] + atob(at) + host + ":" + port + commonUrlPart;
+        const protocolSec = atob(pt) + '://' + userIDArray[0] + atob(at) + host + ":" + port + commonUrlParttls;
         document.getElementById("proxyConfig").textContent = protocolSec;
       }
     </script>
@@ -1277,7 +1278,7 @@ function GenSub(userID_path, hostname, proxyIP) {
 	const proxyIPArray = Array.isArray(proxyIP) ? proxyIP : (proxyIP ? (proxyIP.includes(',') ? proxyIP.split(',') : [proxyIP]) : proxyIPs);
 	const randomPath = () => '/' + Math.random().toString(36).substring(2, 15) + '?ed=2048';
 	const commonUrlPartHttp = `?encryption=none&security=none&fp=random&type=ws&host=${hostname}&path=${encodeURIComponent(randomPath())}#`;
-	const commonUrlPartHttps = `?encryption=none&security=tls&sni=${hostname}&fp=random&type=ws&host=${hostname}&path=%2F%3Fed%3D2048#`;
+	const commonUrlParttlsHttps = `?encryption=none&security=tls&sni=${hostname}&fp=random&type=ws&host=${hostname}&path=%2F%3Fed%3D2048#`;
 
 	const result = userIDArray.flatMap((userID) => {
 		let allUrls = [];
@@ -1296,7 +1297,7 @@ function GenSub(userID_path, hostname, proxyIP) {
 		mainDomains.forEach(domain => {
 			Array.from(HttpsPort).forEach((port) => {
 				const urlPart = `${hostname.split('.')[0]}-${domain}-HTTPS-${port}`;
-				const mainProtocolHttps = atob(pt) + '://' + userID + atob(at) + domain + ':' + port + commonUrlPartHttps + urlPart;
+				const mainProtocolHttps = atob(pt) + '://' + userID + atob(at) + domain + ':' + port + commonUrlParttlsHttps + urlPart;
 				allUrls.push(mainProtocolHttps);
 			});
 		});
@@ -1305,7 +1306,7 @@ function GenSub(userID_path, hostname, proxyIP) {
 		proxyIPArray.forEach((proxyAddr) => {
 			const [proxyHost, proxyPort = '443'] = proxyAddr.split(':');
 			const urlPart = `${hostname.split('.')[0]}-${proxyHost}-HTTPS-${proxyPort}`;
-			const secondaryProtocolHttps = atob(pt) + '://' + userID + atob(at) + proxyHost + ':' + proxyPort + commonUrlPartHttps + urlPart + '-' + atob(ed);
+			const secondaryProtocolHttps = atob(pt) + '://' + userID + atob(at) + proxyHost + ':' + proxyPort + commonUrlParttlsHttps + urlPart + '-' + atob(ed);
 			allUrls.push(secondaryProtocolHttps);
 		});
 
