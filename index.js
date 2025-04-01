@@ -6,7 +6,7 @@ import { connect } from 'cloudflare:sockets';
  * User configuration and settings
  * Generate UUID: [Windows] Press "Win + R", input cmd and run: Powershell -NoExit -Command "[guid]::NewGuid()"
  */
-let userID = '56552fe3-dce7-44f4-9d89-e375eaffc9ae';
+let userID = '799e8135-e487-4889-97f6-be8fb569678d';
 
 /**
  * Array of proxy server addresses with ports
@@ -997,7 +997,7 @@ const ed = 'RUR0dW5uZWw=';
  * @returns {string} Configuration HTML
  */
 function getConfig(userIDs, hostName, proxyIP) {
-	const commonUrlPart = `?encryption=none&security=tls&sni=${hostName}&fp=randomized&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#${hostName}`;
+	const commonUrlTls = `?encryption=none&security=tls&sni=${hostName}&fp=randomized&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#${hostName}`;
 
 	// Split the userIDs into an array
 	const userIDArray = userIDs.split(",");
@@ -1145,10 +1145,7 @@ function getConfig(userIDs, hostName, proxyIP) {
 
 	const header = `
     <div class="container">
-      <h1>EDtunnel: Protocol Configuration</h1>
-      <img src="https://cdn.jsdelivr.net/gh/6Kmfi6HP/EDtunnel@refs/heads/main/image/logo.png" alt="EDtunnel Logo" class="logo">
-      <p>Welcome! This function generates configuration for the vless protocol. If you found this useful, please check our GitHub project:</p>
-      <p><a href="https://github.com/6Kmfi6HP/EDtunnel" target="_blank" style="color: #00ff00;">EDtunnel - https://github.com/6Kmfi6HP/EDtunnel</a></p>
+      <h1> 协议配置 </h1>
       <div style="clear: both;"></div>
       <div class="btn-group">
         <a href="//${hostName}/sub/${userIDArray[0]}" class="btn" target="_blank"><i class="fas fa-link"></i> VLESS Subscription</a>
@@ -1157,21 +1154,21 @@ function getConfig(userIDs, hostName, proxyIP) {
         <a href="${subbestip}" class="btn" target="_blank"><i class="fas fa-star"></i> Best IP Subscription</a>
       </div>
       <div class="subscription-info">
-        <h3>Options Explained:</h3>
+        <h3>选项说明:</h3>
         <ul>
-          <li><strong>VLESS Subscription:</strong> Direct link for VLESS protocol configuration. Suitable for clients supporting VLESS.</li>
-          <li><strong>Clash Subscription:</strong> Opens the Clash client with pre-configured settings. Best for Clash users on mobile devices.</li>
-          <li><strong>Clash Link:</strong> A web link to convert the VLESS config to Clash format. Useful for manual import or troubleshooting.</li>
-          <li><strong>Best IP Subscription:</strong> Provides a curated list of optimal server IPs for many <b>different countries</b>.</li>
+          <li><strong>VLESS Subscription:</strong> VLESS 协议配置的直接链接。适用于支持 VLESS 的客户端。</li>
+          <li><strong>Clash Subscription:</strong> 使用预配置设置打开 Clash 客户端。最适合移动设备上的 Clash 用户。</li>
+          <li><strong>Clash Link:</strong> 将 VLESS 配置转换为 Clash 格式的网络链接。适用于手动导入或故障排除。</li>
+          <li><strong>Best IP Subscription:</strong> 为许多不同的国家/地区提供精选的最佳服务器 IP 列表。</b>.</li>
         </ul>
-        <p>Choose the option that best fits your client and needs. For most users, the VLESS or Clash Subscription will be the easiest to use.</p>
+        <p>选择最适合您的客户和需求的选项。对于大多数用户来说，VLESS 或 Clash 订阅是最容易使用的。</p>
       </div>
     </div>
   `;
 
 	const configOutput = userIDArray.map((userID) => {
-		const protocolMain = atob(pt) + '://' + userID + atob(at) + hostName + ":443" + commonUrlPart;
-		const protocolSec = atob(pt) + '://' + userID + atob(at) + proxyIP[0].split(':')[0] + ":" + proxyPort + commonUrlPart;
+		const protocolMain = atob(pt) + '://' + userID + atob(at) + hostName + ":443" + commonUrlTls;
+		const protocolSec = atob(pt) + '://' + userID + atob(at) + proxyIP[0].split(':')[0] + ":" + proxyPort + commonUrlTls;
 		return `
       <div class="container config-item">
         <h2>UUID: ${userID}</h2>
@@ -1208,7 +1205,7 @@ function getConfig(userIDs, hostName, proxyIP) {
       const userIDArray = ${JSON.stringify(userIDArray)};
       const pt = "${pt}";
       const at = "${at}";
-      const commonUrlPart = "?encryption=none&security=tls&sni=${hostName}&fp=randomized&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#${hostName}";
+      const commonUrlTls = "?encryption=none&security=tls&sni=${hostName}&fp=randomized&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#${hostName}";
 
       function copyToClipboard(text) {
         navigator.clipboard.writeText(text)
@@ -1224,7 +1221,7 @@ function getConfig(userIDs, hostName, proxyIP) {
         const select = document.getElementById('proxySelect');
         const proxyValue = select.value;
         const [host, port] = proxyValue.split(':');
-        const protocolSec = atob(pt) + '://' + userIDArray[0] + atob(at) + host + ":" + port + commonUrlPart;
+        const protocolSec = atob(pt) + '://' + userIDArray[0] + atob(at) + host + ":" + port + commonUrlTls;
         document.getElementById("proxyConfig").textContent = protocolSec;
       }
     </script>
@@ -1285,8 +1282,8 @@ function GenSub(userID_path, hostname, proxyIP) {
 	const userIDArray = userID_path.includes(',') ? userID_path.split(",") : [userID_path];
 	const proxyIPArray = Array.isArray(proxyIP) ? proxyIP : (proxyIP ? (proxyIP.includes(',') ? proxyIP.split(',') : [proxyIP]) : proxyIPs);
 	const randomPath = () => '/' + Math.random().toString(36).substring(2, 15) + '?ed=2048';
-	const commonUrlPartHttp = `?encryption=none&security=none&fp=random&type=ws&host=${hostname}&path=${encodeURIComponent(randomPath())}#`;
-	const commonUrlPartHttps = `?encryption=none&security=tls&sni=${hostname}&fp=random&type=ws&host=${hostname}&path=%2F%3Fed%3D2048#`;
+	const commonUrlTlsHttp = `?encryption=none&security=none&fp=random&type=ws&host=${hostname}&path=${encodeURIComponent(randomPath())}#`;
+	const commonUrlTlsHttps = `?encryption=none&security=tls&sni=${hostname}&fp=random&type=ws&host=${hostname}&path=%2F%3Fed%3D2048#`;
 
 	const result = userIDArray.flatMap((userID) => {
 		let allUrls = [];
@@ -1295,7 +1292,7 @@ function GenSub(userID_path, hostname, proxyIP) {
 			mainDomains.forEach(domain => {
 				Array.from(HttpPort).forEach((port) => {
 					const urlPart = `${hostname.split('.')[0]}-${domain}-HTTP-${port}`;
-					const mainProtocolHttp = atob(pt) + '://' + userID + atob(at) + domain + ':' + port + commonUrlPartHttp + urlPart;
+					const mainProtocolHttp = atob(pt) + '://' + userID + atob(at) + domain + ':' + port + commonUrlTlsHttp + urlPart;
 					allUrls.push(mainProtocolHttp);
 				});
 			});
@@ -1305,7 +1302,7 @@ function GenSub(userID_path, hostname, proxyIP) {
 		mainDomains.forEach(domain => {
 			Array.from(HttpsPort).forEach((port) => {
 				const urlPart = `${hostname.split('.')[0]}-${domain}-HTTPS-${port}`;
-				const mainProtocolHttps = atob(pt) + '://' + userID + atob(at) + domain + ':' + port + commonUrlPartHttps + urlPart;
+				const mainProtocolHttps = atob(pt) + '://' + userID + atob(at) + domain + ':' + port + commonUrlTlsHttps + urlPart;
 				allUrls.push(mainProtocolHttps);
 			});
 		});
@@ -1314,7 +1311,7 @@ function GenSub(userID_path, hostname, proxyIP) {
 		proxyIPArray.forEach((proxyAddr) => {
 			const [proxyHost, proxyPort = '443'] = proxyAddr.split(':');
 			const urlPart = `${hostname.split('.')[0]}-${proxyHost}-HTTPS-${proxyPort}`;
-			const secondaryProtocolHttps = atob(pt) + '://' + userID + atob(at) + proxyHost + ':' + proxyPort + commonUrlPartHttps + urlPart + '-' + atob(ed);
+			const secondaryProtocolHttps = atob(pt) + '://' + userID + atob(at) + proxyHost + ':' + proxyPort + commonUrlTlsHttps + urlPart + '-' + atob(ed);
 			allUrls.push(secondaryProtocolHttps);
 		});
 
