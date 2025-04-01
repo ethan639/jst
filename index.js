@@ -12,7 +12,7 @@ let userID = '799e8135-e487-4889-97f6-be8fb569678d';
  * Array of proxy server addresses with ports
  * Format: ['hostname:port', 'hostname:port']
  */
-const proxyIPs = ['ts.hpc.tw:443', 'bestproxy.onecf.eu.org:443'];
+const proxyIPs = ['91.149.239.252', '141.148.187.195', '103.137.63.2'];
 
 // Randomly select a proxy server from the pool
 let proxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
