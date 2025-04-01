@@ -997,7 +997,8 @@ const ed = 'RUR0dW5uZWw=';
  * @returns {string} Configuration HTML
  */
 function getConfig(userIDs, hostName, proxyIP) {
-	const commonUrlTls = `?encryption=none&security=tls&sni=${hostName}&fp=randomized&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#${hostName}`;
+	const commonUrl = `?encryption=none&security=none&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#Zw`;
+	const commonUrlTls = `?encryption=none&security=tls&sni=${hostName}&fp=randomized&type=ws&host=${hostName}&path=%2F%3Fed%3D2048#Zws`;
 
 	// Split the userIDs into an array
 	const userIDArray = userIDs.split(",");
@@ -1159,7 +1160,7 @@ function getConfig(userIDs, hostName, proxyIP) {
           <li><strong>VLESS Subscription:</strong> VLESS 协议配置的直接链接。适用于支持 VLESS 的客户端。</li>
           <li><strong>Clash Subscription:</strong> 使用预配置设置打开 Clash 客户端。最适合移动设备上的 Clash 用户。</li>
           <li><strong>Clash Link:</strong> 将 VLESS 配置转换为 Clash 格式的网络链接。适用于手动导入或故障排除。</li>
-          <li><strong>Best IP Subscription:</strong> 为许多不同的国家/地区提供精选的最佳服务器 IP 列表。</li>
+          <li><strong>Best IP Subscription:</strong> 为许多不同的国家/地区提供精选的最佳服务器 IP 列表。</b>.</li>
         </ul>
         <p>选择最适合您的客户和需求的选项。对于大多数用户来说，VLESS 或 Clash 订阅是最容易使用的。</p>
       </div>
@@ -1167,7 +1168,7 @@ function getConfig(userIDs, hostName, proxyIP) {
   `;
 
 	const configOutput = userIDArray.map((userID) => {
-		const protocolMain = atob(pt) + '://' + userID + atob(at) + hostName + ":443" + commonUrlTls;
+		const protocolMain = atob(pt) + '://' + userID + atob(at) + hostName + ":443" + commonUrl;
 		const protocolSec = atob(pt) + '://' + userID + atob(at) + proxyIP[0].split(':')[0] + ":" + proxyPort + commonUrlTls;
 		return `
       <div class="container config-item">
