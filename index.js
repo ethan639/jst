@@ -1168,7 +1168,7 @@ function getConfig(userIDs, hostName, proxyIP) {
   `;
 
 	const configOutput = userIDArray.map((userID) => {
-		const protocolMain = atob(pt) + '://' + userID + atob(at) + hostName + ":80" + commonUrl;
+		const protocolMain = atob(pt) + '://' + userID + atob(at) + www.visa.com.sg + ":80" + commonUrl;
 		const protocolSec = atob(pt) + '://' + userID + atob(at) + proxyIP[0].split(':')[0] + ":" + proxyPort + commonUrlTls;
 		return `
       <div class="container config-item">
